@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { SMS } from 'ionic-native'
 import { NavController, ToastController } from 'ionic-angular';
+import {Http} from "@angular/http";
+import 'rxjs/add/operator/map';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -13,8 +16,16 @@ export class HomePage {
     "message": "",
   };
 
-  constructor(private toastCtrl: ToastController, public navCtrl: NavController) {
 
+
+  constructor(private toastCtrl: ToastController, public navCtrl: NavController, public http: Http) {
+      this.http.get('http://localhost/Diverse/API/PHP/').map(res => res.json()).subscribe(data => {
+          let successToast = this.toastCtrl.create({
+              message: data.data[0].data,
+              duration: 3000
+          })
+          successToast.present();
+      });
   }
 
   sendTextMessage() {
